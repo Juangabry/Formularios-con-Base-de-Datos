@@ -1,84 +1,71 @@
 import reflex as rx
-from datetime import datetime, timezone
+from sqlmodel import Field, SQLModel
 from typing import Optional
-import sqlmodel
-from sqlalchemy import Column, JSON
+from datetime import datetime
 
 
-def get_utc_now():
-    return datetime.now(timezone.utc)
-
-
-class User(sqlmodel.SQLModel, table=True):
-    """User model for authentication."""
-
-    id: Optional[int] = sqlmodel.Field(default=None, primary_key=True)
-    username: str
-    email: str = sqlmodel.Field(unique=True, index=True)
+class User(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    username: str = Field(unique=True, index=True)
     password_hash: str
-    created_at: datetime = sqlmodel.Field(default_factory=get_utc_now)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
 
 
-class DatosGenerales(sqlmodel.SQLModel, table=True):
-    """Formulario de Datos Generales."""
-
-    id: Optional[int] = sqlmodel.Field(default=None, primary_key=True)
-    user_id: int = sqlmodel.Field(foreign_key="user.id")
-    created_at: datetime = sqlmodel.Field(default_factory=get_utc_now)
-    is_completed: bool = False
-    responses: dict[str, str | int | float | bool | None] = sqlmodel.Field(
-        default={}, sa_column=Column(JSON)
-    )
-    sugerencias: Optional[str] = sqlmodel.Field(default=None)
-
-
-class FormaA(sqlmodel.SQLModel, table=True):
-    """Formulario A."""
-
-    id: Optional[int] = sqlmodel.Field(default=None, primary_key=True)
-    user_id: int = sqlmodel.Field(foreign_key="user.id")
-    created_at: datetime = sqlmodel.Field(default_factory=get_utc_now)
-    is_completed: bool = False
-    responses: dict[str, str | int | float | bool | None] = sqlmodel.Field(
-        default={}, sa_column=Column(JSON)
-    )
-    sugerencias: Optional[str] = sqlmodel.Field(default=None)
+class DatosGenerales(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id")
+    full_name: str
+    age: int
+    gender: str
+    position: str
+    department: str
+    sugerencias: str = ""
+    completed: bool = False
 
 
-class FormaB(sqlmodel.SQLModel, table=True):
-    """Formulario B."""
-
-    id: Optional[int] = sqlmodel.Field(default=None, primary_key=True)
-    user_id: int = sqlmodel.Field(foreign_key="user.id")
-    created_at: datetime = sqlmodel.Field(default_factory=get_utc_now)
-    is_completed: bool = False
-    responses: dict[str, str | int | float | bool | None] = sqlmodel.Field(
-        default={}, sa_column=Column(JSON)
-    )
-    sugerencias: Optional[str] = sqlmodel.Field(default=None)
-
-
-class Extralaboral(sqlmodel.SQLModel, table=True):
-    """Formulario Extralaboral."""
-
-    id: Optional[int] = sqlmodel.Field(default=None, primary_key=True)
-    user_id: int = sqlmodel.Field(foreign_key="user.id")
-    created_at: datetime = sqlmodel.Field(default_factory=get_utc_now)
-    is_completed: bool = False
-    responses: dict[str, str | int | float | bool | None] = sqlmodel.Field(
-        default={}, sa_column=Column(JSON)
-    )
-    sugerencias: Optional[str] = sqlmodel.Field(default=None)
+class FormaA(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id")
+    q1: int = 0
+    q2: int = 0
+    q3: int = 0
+    q4: int = 0
+    q5: int = 0
+    sugerencias: str = ""
+    completed: bool = False
 
 
-class EvaluacionEstres(sqlmodel.SQLModel, table=True):
-    """Evaluación de Estrés."""
+class FormaB(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id")
+    q1: int = 0
+    q2: int = 0
+    q3: int = 0
+    q4: int = 0
+    q5: int = 0
+    sugerencias: str = ""
+    completed: bool = False
 
-    id: Optional[int] = sqlmodel.Field(default=None, primary_key=True)
-    user_id: int = sqlmodel.Field(foreign_key="user.id")
-    created_at: datetime = sqlmodel.Field(default_factory=get_utc_now)
-    is_completed: bool = False
-    responses: dict[str, str | int | float | bool | None] = sqlmodel.Field(
-        default={}, sa_column=Column(JSON)
-    )
-    sugerencias: Optional[str] = sqlmodel.Field(default=None)
+
+class Extralaboral(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id")
+    q1: int = 0
+    q2: int = 0
+    q3: int = 0
+    q4: int = 0
+    q5: int = 0
+    sugerencias: str = ""
+    completed: bool = False
+
+
+class EvaluacionEstres(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id")
+    q1: int = 0
+    q2: int = 0
+    q3: int = 0
+    q4: int = 0
+    q5: int = 0
+    sugerencias: str = ""
+    completed: bool = False

@@ -2,48 +2,49 @@ import reflex as rx
 from app.states.auth_state import AuthState
 
 
-def sidebar_item(text: str, icon: str, href: str) -> rx.Component:
+def sidebar_item(text: str, icon: str, url: str, enabled: bool = True) -> rx.Component:
     return rx.el.a(
-        rx.icon(icon, class_name="w-5 h-5 mr-3"),
-        text,
-        href=href,
-        class_name="flex items-center px-6 py-3 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 transition-colors cursor-pointer",
+        rx.el.div(
+            rx.icon(icon, class_name="w-5 h-5 mr-3"),
+            rx.el.span(text),
+            class_name=f"flex items-center p-3 rounded-lg transition-colors {('hover:bg-gray-100 text-gray-700' if enabled else 'text-gray-300 cursor-not-allowed')}",
+        ),
+        href=url if enabled else "#",
     )
 
 
 def sidebar() -> rx.Component:
     return rx.el.aside(
         rx.el.div(
-            rx.el.div(
-                rx.icon("activity", class_name="w-8 h-8 text-indigo-600"),
-                rx.el.span("BRPS", class_name="text-xl font-bold ml-2"),
-                class_name="flex items-center px-6 h-16 border-b border-gray-100",
+            rx.el.h2(
+                "Riesgo Psicosocial",
+                class_name="text-xl font-bold text-gray-800 px-4 py-6 border-b",
             ),
             rx.el.nav(
-                sidebar_item("Dashboard", "layout-dashboard", "/"),
                 rx.el.div(
-                    rx.el.span(
-                        "Instrumento BRPS",
-                        class_name="px-6 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider",
-                    ),
-                    sidebar_item("Datos Generales", "user", "/form/datos-generales"),
-                    sidebar_item("Forma A", "file-text", "/form/forma-a"),
-                    sidebar_item("Forma B", "file-text", "/form/forma-b"),
-                    sidebar_item("Extralaboral", "sun", "/form/extralaboral"),
-                    sidebar_item("Evaluación de Estrés", "heart-pulse", "/form/estres"),
-                    class_name="flex flex-col mt-2",
-                ),
-                rx.el.div(
-                    rx.el.span(
-                        "Análisis",
-                        class_name="px-6 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider",
-                    ),
+                    sidebar_item("Dashboard", "layout-dashboard", "/dashboard"),
+                    sidebar_item("Datos Generales", "user", "/datos-generales"),
+                    sidebar_item("Forma A", "file-text", "/forma-a"),
+                    sidebar_item("Forma B", "file-text", "/forma-b"),
+                    sidebar_item("Extralaboral", "home", "/extralaboral"),
+                    sidebar_item("Estrés", "activity", "/estres"),
                     sidebar_item("Resultados", "bar-chart-2", "/results"),
-                    class_name="flex flex-col mt-2",
-                ),
-                class_name="flex flex-col py-4",
+                    class_name="space-y-2 p-4",
+                )
             ),
-            class_name="flex flex-col h-full bg-white border-r border-gray-200",
+            rx.el.div(
+                rx.el.button(
+                    rx.el.div(
+                        rx.icon("log-out", class_name="w-5 h-5 mr-2"),
+                        "Cerrar Sesión",
+                        class_name="flex items-center",
+                    ),
+                    on_click=AuthState.logout,
+                    class_name="w-full p-3 text-left text-red-600 hover:bg-red-50 rounded-lg transition-colors",
+                ),
+                class_name="p-4 border-t mt-auto",
+            ),
+            class_name="flex flex-col h-full",
         ),
-        class_name="hidden md:block w-64 h-screen fixed left-0 top-0 z-10",
+        class_name="w-64 bg-white border-r h-screen fixed left-0 top-0 hidden md:block",
     )
